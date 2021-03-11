@@ -40,17 +40,16 @@ def validate_finite_values_entity(values: List[Dict], supported_values: List[str
     filled=False
     partially_filled=False
     trigger=""
+    default_response = (False,False,trigger,{})
 
     params={key:[]}
     
   
 
     if values_length==0:
-        return (False,False,trigger,{})
-    
+        return build_response(default_response)
 
     for doc in values:
-        print(params,pick_first)
         try:
             if supported_values.index(doc["value"]) >= 0:
                 filled_count+=1
@@ -110,30 +109,39 @@ def validate_numeric_entity(values: List[Dict], invalid_trigger: str = None, key
     filled=False
     partially_filled=False
     trigger=""
+    default_response=(False,False,trigger,{})
 
     params={key:[]}
   
 
     if values_length==0:
-        return (False,False,trigger,{})
+        
+        return build_response(default_response)
     
 
     for doc in values:
-        print(params)
+    
+        try:      
+            exp = constraint.replace(var_name,str(doc["value"]))
+            result = eval(exp)
 
-        exp = constraint.replace(var_name,str(doc["value"]))
-        result = eval(exp)
+            if result:
+                count+=1
+                params[key].append(doc["value"])
+                
+            else:
+                trigger=invalid_trigger
 
-        if result:
-            count+=1
-            params[key].append(doc["value"])
-            
-        else:
-            trigger=invalid_trigger
+        except NameError:
+            # if the var_name is not found in the constraint then return default response
+            return build_response(default_response)
+
+
             
             
     
     if count==values_length:
+        # if all the values matches the constraints
         filled = True
         partially_filled = False
     else:
@@ -143,6 +151,7 @@ def validate_numeric_entity(values: List[Dict], invalid_trigger: str = None, key
     if len(params[key])==0:
         params={}
     elif pick_first and len(params[key])>0:
+        #pick the first element in list of params
         params[key]=params[key][0]
     
     response = (filled,partially_filled,trigger,params)

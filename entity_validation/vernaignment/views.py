@@ -15,7 +15,7 @@ import json
 def validate_finite_values_api(request):
     # return validators.validate_finite_values_entity(request.data)
     data = request.data
-    support_multiple = validators.string_to_bool(data.get("support_multiple","false"))
+    support_multiple = validators.string_to_bool(data.get("support_multiple","true"))
     pick_first = validators.string_to_bool(data.get("pick_first","false"))
 
 
@@ -34,7 +34,7 @@ def validate_finite_values_api(request):
 @api_view(['POST'])
 def validate_numeric_api(request):
     data = request.data
-    support_multiple = validators.string_to_bool(data.get("support_multiple","false"))
+    support_multiple = validators.string_to_bool(data.get("support_multiple","true"))
     pick_first = validators.string_to_bool(data.get("pick_first","false"))
     
     result=validators.validate_numeric_entity(
