@@ -1,5 +1,7 @@
 from typing import List, Dict, Callable, Tuple
 from django.http import HttpResponse
+
+
 SlotValidationResult = Tuple[bool, bool, str, Dict]
 
 
@@ -44,3 +46,50 @@ def validate_numeric_entity(values: List[Dict], invalid_trigger: str = None, key
     :param var_name: Name of the var used to express the numeric constraint
     :return: a tuple of (filled, partially_filled, trigger, params)
     """
+   
+    values_length = len(values)
+    count = 0
+    filled=False
+    partially_filled=False
+    trigger=""
+
+    params={key:[]}
+  
+
+    if values_length==0:
+        return (False,False,trigger,{})
+    
+
+    for doc in values:
+        print(params)
+
+        exp = constraint.replace(var_name,str(doc["value"]))
+        result = eval(exp)
+
+        if result:
+            count+=1
+            params[key].append(doc["value"])
+            
+        else:
+            trigger=invalid_trigger
+            
+            
+    
+    if count==values_length:
+        filled = True
+        partially_filled = False
+    else:
+        partially_filled=True
+
+    
+    if len(params[key])==0:
+        params={}
+    elif pick_first and len(params[key])>0:
+        params[key]=params[key][0]
+    
+    
+    return (filled,partially_filled,trigger,params)
+
+        
+
+
