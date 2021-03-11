@@ -14,30 +14,41 @@ import json
 @api_view(['POST'])
 def validate_finite_values_api(request):
     # return validators.validate_finite_values_entity(request.data)
-    pass
+    data = request.data
+    support_multiple = validators.string_to_bool(data.get("support_multiple","false"))
+    pick_first = validators.string_to_bool(data.get("pick_first","false"))
+
+
+    result = validators.validate_finite_values_entity(
+        json.loads(data.get("values")),
+        json.loads(data.get("supported_values")),
+        data.get("invalid_trigger"),
+        data.get("key"),
+        support_multiple,
+        pick_first
+    )
+    
+    return JsonResponse(result)
     
 
 @api_view(['POST'])
 def validate_numeric_api(request):
     data = request.data
+    support_multiple = validators.string_to_bool(data.get("support_multiple","false"))
+    pick_first = validators.string_to_bool(data.get("pick_first","false"))
     
     result=validators.validate_numeric_entity(
         json.loads(data.get("values")),
         data.get("invalid_trigger"),
         data.get("key"),
-        bool(data.get("support_multiple",False)),
-        bool(data.get("pick_first",False)),
+        support_multiple,
+        pick_first,
         data.get("constraint"),
         data.get("var_name")
     )
 
-    response_data={}
-    response_data["filled"]=result[0]
-    response_data["partially_filled"]=result[1]
-    response_data["trigger"]=result[2]
-    response_data["parameters"]=result[-1]
     
-    return JsonResponse(response_data)
+    return JsonResponse(result)
 
 
 

@@ -4,6 +4,19 @@ from django.http import HttpResponse
 
 SlotValidationResult = Tuple[bool, bool, str, Dict]
 
+def build_response(result):
+    response_data={}
+    response_data["filled"]=result[0]
+    response_data["partially_filled"]=result[1]
+    response_data["trigger"]=result[2]
+    response_data["parameters"]=result[3]
+
+    return response_data
+
+
+def string_to_bool(bool_string):
+    s_dict = {"true":True,"false":False}
+    return s_dict[bool_string]
 
 
 def validate_finite_values_entity(values: List[Dict], supported_values: List[str] = None,
@@ -21,6 +34,51 @@ def validate_finite_values_entity(values: List[Dict], supported_values: List[str
     :param key: Dict key to use in the params returned
     :return: a tuple of (filled, partially_filled, trigger, params)
     """
+
+    values_length = len(values)
+    filled_count = 0
+    filled=False
+    partially_filled=False
+    trigger=""
+
+    params={key:[]}
+    
+  
+
+    if values_length==0:
+        return (False,False,trigger,{})
+    
+
+    for doc in values:
+        print(params,pick_first)
+        try:
+            if supported_values.index(doc["value"]) >= 0:
+                filled_count+=1
+                params[key].append(doc["value"])
+        except:
+            trigger = invalid_trigger
+        
+    
+    if filled_count==values_length:
+        filled = True
+        partially_filled = False
+    else:
+        partially_filled=True
+
+    
+    if len(params[key])==0:
+        params={}
+    elif pick_first and len(params[key])>0:
+        params[key]=params[key][0]
+    
+    response = (filled,partially_filled,trigger,params)
+    
+    return build_response(response)
+
+        
+    
+
+
 
 def validate_numeric_entity(values: List[Dict], invalid_trigger: str = None, key: str = None,
                             support_multiple: bool = True, pick_first: bool = False, constraint=None, var_name=None,
@@ -87,8 +145,9 @@ def validate_numeric_entity(values: List[Dict], invalid_trigger: str = None, key
     elif pick_first and len(params[key])>0:
         params[key]=params[key][0]
     
+    response = (filled,partially_filled,trigger,params)
     
-    return (filled,partially_filled,trigger,params)
+    return build_response(response)
 
         
 
