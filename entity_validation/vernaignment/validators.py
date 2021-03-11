@@ -4,6 +4,8 @@ from django.http import HttpResponse
 
 SlotValidationResult = Tuple[bool, bool, str, Dict]
 
+
+
 def build_response(result):
     response_data={}
     response_data["filled"]=result[0]
@@ -13,6 +15,9 @@ def build_response(result):
 
     return response_data
 
+def send_default_response():
+    response=(False,False,"",{})
+    return build_response(response)
 
 def string_to_bool(bool_string):
     s_dict = {"true":True,"false":False}
