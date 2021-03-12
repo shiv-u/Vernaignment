@@ -5,6 +5,9 @@ Repository for Vernacular.ai assignment
 To build the docker image and to run it use the following command
 - `docker-compose -f docker-compose.yml up --build`
 
+## Docker image size - 
+The size of the docker image built from the above command is - <b>84.31 MB</b>
+
 ## Note - 
 - According to the docstring of `validate_finite_values_entity` we've to send the value as response if it's present in the supported_values list but in
 one of the sample responses provided  `college` is not returned even if it's present in supported_values, this created some confusion so I'm sending the 
