@@ -1,1 +1,3 @@
 https://realpython.com/python-eval-function/
+https://www.youtube.com/watch?v=nh1ynJGJuT8&t=1125s&ab_channel=LondonAppDeveloper
+https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uswgi-and-nginx-on-ubuntu-18-04

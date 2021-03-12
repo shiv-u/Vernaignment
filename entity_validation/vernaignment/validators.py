@@ -58,7 +58,7 @@ def validate_finite_values_entity(values: List[Dict], supported_values: List[str
         try:
             if supported_values.index(doc["value"]) >= 0:
                 filled_count+=1
-                params[key].append(doc["value"])
+                params[key].append(doc["value"].upper())
         except:
             trigger = invalid_trigger
         
