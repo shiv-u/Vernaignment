@@ -23,3 +23,5 @@ matched values if it's present in the supported values list with complaince with
     "trigger": "",
     "parameters": {}
 }`
+
+- The API's have been validated by sending POST response as form-data using Postman.
